@@ -1,45 +1,34 @@
+using Microsoft.OpenApi;
+
 var builder = WebApplication.CreateBuilder(args);
 
+// Añadir servicios de Swagger/OpenAPI
+// builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-// Infra + App DI
-// builder.Services.AddApplication();
-// builder.Services.AddInfrastructure(builder.Configuration);
-
-var connectionString =
-    Environment.GetEnvironmentVariable("DATABASE_URL")
-    ?? builder.Configuration.GetConnectionString("Default");
-
-// builder.Services.AddDbContext<AppDbContext>(options =>
-//     options.UseNpgsql(connectionString));
-
-builder.Services.AddCors(options =>
+builder.Services.AddSwaggerGen(options =>
 {
-    options.AddPolicy("Mobile", policy =>
-        policy.AllowAnyOrigin()
-              .AllowAnyHeader()
-              .AllowAnyMethod());
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "BarberFlow API",
+        Description = "API para gestión de barbería"
+    });
 });
 
 var app = builder.Build();
 
-app.UseCors("Mobile");
-
-// using (var scope = app.Services.CreateScope())
-// {
-//     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-//     db.Database.Migrate();
-// }
-
+// Configurar pipeline
 if (app.Environment.IsDevelopment())
 {
+    // app.MapOpenApi();
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+        options.RoutePrefix = string.Empty; // Para ver Swagger en la raíz
+    });
 }
 
-app.UseHttpsRedirection();
-
-app.MapGet("/health", () => Results.Ok("BarberFlow API running 💈"));
+// Tus endpoints aquí...
 
 app.Run();

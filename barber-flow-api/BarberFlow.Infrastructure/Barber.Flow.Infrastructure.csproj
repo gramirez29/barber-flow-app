@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\BarberFlow.Domain\BarberFlow.Domain.csproj" />
-    <ProjectReference Include="..\BarberFlow.Application\BarberFlow.Application.csproj" />
+    <ProjectReference Include="..\BarberFlow.Domain\Barber.Flow.Domain.csproj" />
+    <ProjectReference Include="..\BarberFlow.Application\Barber.Flow.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>
